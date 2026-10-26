@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#152033">
+<title>500MTE Reading Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: phone first app. Compact header, one view at a time, tab bar fixed to the bottom. */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --ink:#152033; --muted:#566377; --line:#d9dfe8; --grid:#e6ebf2;
+  --accent:#1d55c4; --accent-soft:#e3ecfb; --done:#1f7a4d; --done-soft:#e1f2e8; --warn:#b4570d; --warn-soft:#fbeedd;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f141c; --surface:#161d28; --ink:#e7ecf3; --muted:#9aa7b9; --line:#2a3445; --grid:#1f2835;
+  --accent:#7aa6ff; --accent-soft:#1c2a45; --done:#5fd197; --done-soft:#16301f; --warn:#f0a35c; --warn-soft:#352414; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141c; --surface:#161d28; --ink:#e7ecf3; --muted:#9aa7b9; --line:#2a3445; --grid:#1f2835;
+  --accent:#7aa6ff; --accent-soft:#1c2a45; --done:#5fd197; --done-soft:#16301f; --warn:#f0a35c; --warn-soft:#352414; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+:root{padding-top:env(safe-area-inset-top,0px)}
+[hidden]{display:none!important}
+.tform{display:grid;grid-template-columns:minmax(0,1fr) 150px auto;gap:8px;align-items:end}
+@media (max-width:480px){.tform{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.tform .btn{grid-column:1/-1}}
+.tform label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);font-weight:600;min-width:0}
+.tform input,textarea{min-height:44px;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:15px var(--body);padding:0 10px}
+textarea{padding:10px;min-height:90px;font:13px var(--mono)}
+.btn.ghost{background:var(--accent-soft);color:var(--accent)}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.top .in{max-width:760px;margin:0 auto;padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;justify-content:space-between;align-items:center;gap:12px}
+.top h1{font-family:var(--display);font-weight:800;font-size:20px;margin:0;line-height:1.1}
+.top small{display:block;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+.pill{font:700 13px var(--mono);background:var(--accent-soft);color:var(--accent);padding:6px 10px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pill.ok{background:var(--done-soft);color:var(--done)}
+main{max-width:760px;margin:0 auto;padding-block:16px calc(96px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.view{display:flex;flex-direction:column;gap:16px}
+h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0;text-wrap:balance}
+h3{margin:0;font-size:16px}
+.note{font-size:14px;color:var(--muted);margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.days button{min-height:52px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;font:700 13px var(--body);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15;padding:4px 0;position:relative}
+.days button small{font:500 11px var(--mono);color:var(--muted)}
+.days button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.days button[aria-pressed="true"] small{color:var(--surface);opacity:.8}
+.days button .dot{position:absolute;bottom:4px;width:6px;height:6px;border-radius:50%;background:var(--done)}
+.days button.today{box-shadow:0 0 0 2px var(--accent)}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.big{font:700 26px var(--mono);font-variant-numeric:tabular-nums}
+.big span{font-size:14px;color:var(--muted);font-weight:500}
+.bar{height:10px;border-radius:5px;background:var(--grid);position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--accent);border-radius:5px;transition:width .3s}
+.bar.ok i{background:var(--done)}
+.bar .min{position:absolute;top:0;bottom:0;width:2px;background:var(--ink);opacity:.45}
+.status{font-size:14px;font-weight:700}
+.status.ok{color:var(--done)} .status.short{color:var(--warn)}
+.blocks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.block{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--surface)}
+.block.is-done{background:var(--done-soft);border-color:transparent}
+.time{font:700 13px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.code{display:inline-block;font:700 12px var(--mono);padding:2px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);margin-right:6px}
+.block p{margin:4px 0 0;font-size:15px}
+.check{width:48px;height:48px;border-radius:50%;border:2px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;display:grid;place-items:center}
+.is-done .check{background:var(--done);border-color:var(--done);color:var(--surface)}
+.check svg{width:22px;height:22px}
+details.more{border-top:1px dashed var(--line);padding-top:12px}
+details.more summary{cursor:pointer;font-weight:700;font-size:15px;min-height:32px;list-style-position:inside}
+form.log{display:grid;grid-template-columns:minmax(0,1fr) 90px auto;gap:8px;align-items:end;margin-top:10px}
+@media (max-width:420px){form.log{grid-template-columns:minmax(0,1fr) 84px}form.log .btn{grid-column:1/-1}}
+form.log label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);font-weight:600;min-width:0}
+form.log select,form.log input{min-height:44px;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:15px var(--body);padding:0 10px}
+.btn{min-height:44px;border:0;border-radius:8px;background:var(--accent);color:var(--surface);font:700 15px var(--body);padding:0 16px;cursor:pointer}
+.extra{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.extra li{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.linkbtn{background:none;border:0;color:var(--muted);font:600 13px var(--body);cursor:pointer;text-decoration:underline;min-height:36px}
+.weekbars{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;align-items:end;height:140px;border-bottom:1px solid var(--line)}
+.wb{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px}
+.wb .col{width:100%;max-width:30px;background:var(--grid);border-radius:4px 4px 0 0;position:relative}
+.wb .col i{position:absolute;left:0;right:0;bottom:0;background:var(--accent);border-radius:4px 4px 0 0}
+.wb .col.ok i{background:var(--done)}
+.wb span{font:500 11px var(--mono);color:var(--muted)}
+.wblabels{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;text-align:center;font:700 12px var(--body);color:var(--muted)}
+.kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.kv div{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--surface)}
+.kv b{display:block;font:700 20px var(--mono);font-variant-numeric:tabular-nums}
+.kv small{color:var(--muted);font-size:13px}
+.dayplan{display:flex;flex-direction:column;gap:6px}
+.dayplan h3{display:flex;justify-content:space-between;gap:8px;font-size:15px}
+.dayplan h3 span{font:500 12px var(--mono);color:var(--muted)}
+.row{display:grid;grid-template-columns:88px minmax(0,1fr);gap:10px;font-size:14.5px;padding:6px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.acc{border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.acc summary{cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:52px;list-style:none}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"+";font:700 18px var(--mono);color:var(--muted)}
+.acc[open] summary::after{content:"\2212"}
+.acc .bd{padding:0 16px 14px;display:flex;flex-direction:column;gap:6px}
+.acc .u{font:500 12px var(--mono);color:var(--muted)}
+.acc p{margin:0;font-size:15px}
+.flag{background:var(--warn-soft);border-radius:12px;padding:14px;font-size:15px}
+.flag b{color:var(--warn)}
+.rules{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:15px}
+.tests{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.tests li{display:flex;justify-content:space-between;gap:8px}
+.tests .d{font:500 13px var(--mono);color:var(--muted);white-space:nowrap}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+nav.tabs .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+nav.tabs button{min-height:60px;background:none;border:0;color:var(--muted);font:700 12px var(--body);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button[aria-current="page"]{color:var(--accent)}
+button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="in">
+  <div><small>500MTE, first semester</small><h1>Reading Plan</h1></div>
+  <span class="pill" id="topPill">0h 00m today</span>
+</div></header>
+
+<main>
+  <section class="view" id="v-today" aria-labelledby="dayTitle">
+    <div class="days" id="days" role="group" aria-label="Pick a day this week"></div>
+    <div class="card">
+      <div class="head"><h2 id="dayTitle">Today</h2><span class="note" id="dayClasses"></span></div>
+      <div class="head"><div class="big" id="dayDone">0h 00m <span>of 3h 30m</span></div><div class="status" id="dayStatus"></div></div>
+      <div class="bar" id="dayBar"><i style="width:0%"></i><span class="min" id="dayMin"></span></div>
+    </div>
+    <ul class="blocks" id="blocks"></ul>
+    <details class="more">
+      <summary>Read something else, or a block moved</summary>
+      <form class="log" id="logForm">
+        <label for="logCourse">Course<select id="logCourse"></select></label>
+        <label for="logMin">Minutes<input id="logMin" type="number" min="5" max="300" step="5" value="30" inputmode="numeric"></label>
+        <button class="btn" type="submit">Log time</button>
+      </form>
+      <ul class="extra" id="extra"></ul>
+    </details>
+    <p class="note" id="saveNote">Ticks save on this device automatically.</p>
+  </section>
+
+  <section class="view" id="v-week" aria-labelledby="weekTitle" hidden>
+    <h2 id="weekTitle">This week</h2>
+    <div class="card">
+      <div class="weekbars" id="weekbars" aria-hidden="true"></div>
+      <div class="wblabels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+    </div>
+    <div class="kv">
+      <div><b id="wkTotal">0h 00m</b><small>logged of 24h 15m</small></div>
+      <div><b id="wkDays">0 / 7</b><small>days at the minimum</small></div>
+    </div>
+    <h2>Full timetable</h2>
+    <div id="fullWeek" style="display:flex;flex-direction:column;gap:12px"></div>
+  </section>
+
+  <section class="view" id="v-courses" aria-labelledby="crsTitle" hidden>
+    <h2 id="crsTitle">Where the marks are</h2>
+    <div class="flag"><b>PRE571 Question 1</b> is compulsory and has been the same 3Es &amp; P Conglomerate trial balance every year from 2021/22 to 2024/25. The 2023/24 and 2024/25 papers use identical figures. Master the Manufacturing, Trading, Profit and Loss and Balance Sheet layout and a fifth of the paper is yours before you start.</div>
+    <div id="courses" style="display:flex;flex-direction:column;gap:10px"></div>
+  </section>
+
+  <section class="view" id="v-exams" aria-labelledby="exTitle" hidden>
+    <h2 id="exTitle">Tests and exams</h2>
+    <div class="card">
+      <ul class="tests" id="tests"></ul>
+      <p class="note">Exams are expected in February 2027 because of the elections. Date not confirmed yet.</p>
+      <form class="tform" id="testForm">
+        <label for="tName">Test or exam<input id="tName" type="text" placeholder="MTE531 test" required></label>
+        <label for="tDate">Date<input id="tDate" type="date" required></label>
+        <button class="btn" type="submit">Add</button>
+      </form>
+    </div>
+    <h2>When the day moves</h2>
+    <div class="card">
+      <ol class="rules">
+        <li>Blocks are portable. Miss 5:30, run it after you get home. It counts if the minutes land before midnight.</li>
+        <li>Daily minimum is 3 hours, 2.5 on Friday. Below that, put the gap into Sunday's catch up slot.</li>
+        <li>Never drop the 5:30 block two days running. That block carries the hard calculation work.</li>
+        <li>Commute is capped at 1 hour. Home by 2 pm? Start the evening block early and sleep earlier.</li>
+        <li>Lights out by 11:30. Sleep is when the reading sticks.</li>
+        <li>The week before a test, every free block goes to that course. Send Claude the date and the plan gets rebuilt.</li>
+      </ol>
+    </div>
+    <h2>Backup</h2>
+    <div class="card">
+      <p class="note">Your ticks and test dates are saved on this device. Copy a backup now and then, and paste it here to move them to another phone or laptop.</p>
+      <div class="btnrow"><button class="btn ghost" type="button" id="copyBk">Copy backup</button><button class="btn ghost" type="button" id="loadBk">Restore from pasted backup</button></div>
+      <label for="bkText" class="note">Backup text</label>
+      <textarea id="bkText" spellcheck="false"></textarea>
+      <p class="note" id="bkNote"></p>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="Sections"><div class="in">
+  <button type="button" data-v="today" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Today</button>
+  <button type="button" data-v="week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Week</button>
+  <button type="button" data-v="courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 5h11a3 3 0 0 1 3 3v12H7a3 3 0 0 1-3-3z"/><path d="M8 9h6M8 13h6"/></svg>Courses</button>
+  <button type="button" data-v="exams"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 4h6l1 3h3v13H5V7h3z"/><path d="M9 13l2 2 4-4"/></svg>Exams</button>
+</div></nav>
+
+<script>
+const COURSES={
+  c531:{code:"MTE531",name:"Control Engineering II",u:3,brief:"Root locus, optimisation with error criteria, Nyquist stability, nonlinear systems (saturation, dead zone, phase plane, isoclines, describing function), multivariable systems. Heavy on worked problems. Engr Sly's materials are in your Drive."},
+  c521:{code:"MTE521",name:"Digital Signal Modelling",u:3,brief:"Sequences, LTI systems and convolution, sampling and aliasing, z-transform, DFT and FFT, digital filters. Marks come from computing, not defining. Drill convolution and z-transform until they are automatic."},
+  c511:{code:"MTE511",name:"Microcomputers & Microprocessors",u:3,brief:"2022/23 paper: 8085, 8051 and Z80 architecture diagrams, buses, accumulator, stepper motor interfacing with the 8051, magnitude comparator, combinational vs sequential logic. Full worked solutions to that paper are in your Drive."},
+  pre:{code:"PRE571",name:"Engineering Economics & Admin",u:3,brief:"Q1 final accounts is compulsory every year. Also repeating: cash budget, MBO merits and installation, trade union negotiation, Maslow, elements of organisational behaviour, preference vs equity shares, merit rating, job evaluation."},
+  c561:{code:"MTE561",name:"Vibrations",u:2,brief:"SDOF natural frequency, damping ratio, logarithmic decrement, forced response and phase, transmissibility and isolation, beam frequencies, then MDOF modal analysis. Rao's Mechanical Vibrations and its solution manual are in your Drive."},
+  c551:{code:"MTE551",name:"Introduction to Robotics",u:2,brief:"2024/25 paper: forward and inverse kinematics of a 2-link planar arm in almost every question, plus DH parameters, Tool Center Point, cobots, repeatability vs accuracy, sensors."},
+  c541:{code:"MTE541",name:"Computer Software II",u:2,brief:"OOP in Python, UML, software design, unit testing. Your daily work, so it gets the least time. Learn the lecturer's exact definitions; that is where marks slip."},
+  c576:{code:"MTE576",name:"Lean Product Mgt & Logistics",u:2,brief:"Prof. Aravie sets what he teaches. Attend every class in smart dress, be punctual, write down what he says."},
+  rev:{code:"REVIEW",name:"Same day review",u:0},
+  wk:{code:"WEEKLY",name:"Weekly review",u:0}
+};
+const PLAN={
+  1:{classes:"MTE561, PRE571, MTE531",blocks:[
+    {id:"mon1",at:"5:30 am",min:90,c:"c561",t:"SDOF problems before the 8 am class"},
+    {id:"mon2",at:"9:00 pm",min:45,c:"rev",t:"Clean up today's MTE561, PRE571, MTE531 notes and send to Claude"},
+    {id:"mon3",at:"9:45 pm",min:75,c:"c531",t:"Root locus and Nyquist problems"}]},
+  2:{classes:"MTE576, MTE541, MTE511, MTE521",blocks:[
+    {id:"tue1",at:"5:30 am",min:90,c:"c521",t:"Convolution and z-transform problems"},
+    {id:"tue2",at:"9:00 pm",min:45,c:"rev",t:"Clean up today's MTE576, MTE541, MTE511, MTE521 notes"},
+    {id:"tue3",at:"9:45 pm",min:60,c:"pre",t:"Final accounts drill: one section of the Q1 layout"}]},
+  3:{classes:"MTE511, PRE571",blocks:[
+    {id:"wed1",at:"5:30 am",min:90,c:"c511",t:"Draw 8085 or 8051 architecture from memory, then check"},
+    {id:"wed2",at:"3:00 pm",min:30,c:"rev",t:"Clean up today's MTE511 and PRE571 notes"},
+    {id:"wed3",at:"9:00 pm",min:90,c:"c521",t:"DSP problems from this week's lecture"},
+    {id:"wed4",at:"10:30 pm",min:30,c:"c561",t:"Formula recall on a blank sheet"}]},
+  4:{classes:"MTE551, MTE521, MTE531",blocks:[
+    {id:"thu1",at:"5:30 am",min:90,c:"c551",t:"2-link arm forward and inverse kinematics"},
+    {id:"thu2",at:"9:00 pm",min:30,c:"rev",t:"Clean up today's MTE551, MTE521, MTE531 notes"},
+    {id:"thu3",at:"9:30 pm",min:90,c:"c531",t:"Control problems from this week's lecture"}]},
+  5:{classes:"Project day",blocks:[
+    {id:"fri1",at:"5:30 am",min:45,c:"pre",t:"Theory recall: write the lists from memory, then check"},
+    {id:"fri2",at:"6:15 am",min:45,c:"c551",t:"DH parameters, TCP, sensors, cobots"},
+    {id:"fri3",at:"9:00 pm",min:60,c:"c531",t:"Nonlinear: phase plane, isoclines, describing function"}]},
+  6:{classes:"No classes",blocks:[
+    {id:"sat1",at:"5:30 am",min:60,c:"c531",t:"Timed past questions"},
+    {id:"sat2",at:"6:30 am",min:60,c:"c521",t:"Timed past questions"},
+    {id:"sat3",at:"4:00 pm",min:60,c:"c511",t:"Past questions with the worked solutions"},
+    {id:"sat4",at:"5:00 pm",min:60,c:"c561",t:"Numerical problems from Rao"}]},
+  0:{classes:"No classes",blocks:[
+    {id:"sun1",at:"5:30 am",min:90,c:"pre",t:"Timed full Q1: Manufacturing, Trading, P&L, Balance Sheet"},
+    {id:"sun2",at:"4:00 pm",min:30,c:"c541",t:"Lecture definitions and diagrams"},
+    {id:"sun3",at:"4:30 pm",min:30,c:"c576",t:"Read your class notes from the week"},
+    {id:"sun4",at:"7:00 pm",min:60,c:"wk",t:"Self test, catch up missed minutes, plan next week with Claude"}]}
+};
+const ORDER=[1,2,3,4,5,6,0],DN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],FULL=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const target=d=>PLAN[d].blocks.reduce((a,b)=>a+b.min,0);
+const minimum=d=>d===5?150:180;
+const fmt=m=>`${Math.floor(m/60)}h ${String(m%60).padStart(2,"0")}m`;
+const pad=n=>String(n).padStart(2,"0");
+const key=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const now=new Date();
+const monday=new Date(now.getFullYear(),now.getMonth(),now.getDate()-((now.getDay()+6)%7));
+const weekDates=ORDER.map((_,i)=>new Date(monday.getFullYear(),monday.getMonth(),monday.getDate()+i));
+const dateFor=d=>weekDates[ORDER.indexOf(d)];
+let selected=now.getDay(),db=null;const logs={};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const sum=dk=>(logs[dk]||[]).reduce((a,e)=>a+e.min,0);
+const tick='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+const VIEWS=["today","week","courses","exams"];
+function show(v){if(!VIEWS.includes(v))v="today";VIEWS.forEach(x=>{$("v-"+x).hidden=x!==v});
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.toggleAttribute("aria-current",false));
+  const b=document.querySelector(`nav.tabs button[data-v="${v}"]`);b.setAttribute("aria-current","page");window.scrollTo(0,0);
+  try{localStorage.setItem("view",v)}catch(e){}}
+document.querySelector("nav.tabs").addEventListener("click",e=>{const b=e.target.closest("button[data-v]");if(b)show(b.dataset.v)});
+
+function renderDays(){$("days").innerHTML=ORDER.map(d=>{const dt=dateFor(d),hit=sum(key(dt))>=minimum(d);
+  return `<button type="button" data-d="${d}" aria-pressed="${d===selected}" class="${d===now.getDay()?"today":""}" aria-label="${FULL[d]} ${dt.getDate()}${hit?", minimum reached":""}">${DN[d]}<small>${dt.getDate()}</small>${hit?'<span class="dot"></span>':""}</button>`}).join("")}
+function renderDay(){
+  const p=PLAN[selected],dk=key(dateFor(selected)),entries=logs[dk]||[];
+  $("dayTitle").textContent=selected===now.getDay()?"Today":FULL[selected];
+  $("dayClasses").textContent=p.classes;
+  const done=sum(dk),tg=target(selected),mn=minimum(selected);
+  $("dayDone").innerHTML=`${fmt(done)} <span>of ${fmt(tg)}</span>`;
+  const bar=$("dayBar");bar.querySelector("i").style.width=Math.min(100,done/tg*100)+"%";bar.classList.toggle("ok",done>=mn);$("dayMin").style.left=(mn/tg*100)+"%";
+  const st=$("dayStatus");
+  if(done>=mn){st.textContent=done>=tg?"Full day done":"Minimum reached";st.className="status ok"}else{st.textContent=`${fmt(mn-done)} to the minimum`;st.className="status short"}
+  const ids=new Set(entries.map(e=>e.id));
+  $("blocks").innerHTML=p.blocks.map(b=>{const c=COURSES[b.c],isd=ids.has(b.id);return `<li class="block ${isd?"is-done":""}">
+    <div><div class="time">${b.at}, ${b.min} min</div><div style="margin-top:4px"><span class="code">${c.code}</span><b>${esc(c.name)}</b></div><p>${esc(b.t)}</p></div>
+    <button class="check" type="button" data-b="${b.id}" aria-pressed="${isd}" aria-label="${isd?"Undo":"Mark done"}: ${c.code}, ${b.min} minutes">${tick}</button></li>`}).join("");
+  const extra=entries.filter(e=>!p.blocks.some(b=>b.id===e.id));
+  $("extra").innerHTML=extra.map(e=>`<li><span><span class="code">${COURSES[e.c]?.code||esc(e.c)}</span>${e.min} min extra</span><button class="linkbtn" type="button" data-x="${esc(e.id)}">Remove</button></li>`).join("");
+  const tdone=sum(key(now)),pill=$("topPill");pill.textContent=`${fmt(tdone)} today`;pill.classList.toggle("ok",tdone>=minimum(now.getDay()));
+}
+function renderWeek(){let total=0,ok=0;const max=Math.max(...ORDER.map(target));
+  $("weekbars").innerHTML=ORDER.map(d=>{const m=sum(key(dateFor(d))),tg=target(d);total+=m;if(m>=minimum(d))ok++;
+    return `<div class="wb"><span>${(m/60).toFixed(1)}</span><div class="col ${m>=minimum(d)?"ok":""}" style="height:${tg/max*105}px"><i style="height:${Math.min(1,m/tg)*100}%"></i></div></div>`}).join("");
+  $("wkTotal").textContent=fmt(total);$("wkDays").textContent=`${ok} / 7`;}
+function renderFull(){$("fullWeek").innerHTML=ORDER.map(d=>`<div class="card dayplan"><h3>${FULL[d]} <span>${fmt(target(d))}, classes: ${esc(PLAN[d].classes)}</span></h3>${PLAN[d].blocks.map(b=>`<div class="row"><span class="time">${b.at}<br>${b.min} min</span><span><span class="code">${COURSES[b.c].code}</span>${esc(b.t)}</span></div>`).join("")}</div>`).join("")}
+function renderCourses(){const hrs={};ORDER.forEach(d=>PLAN[d].blocks.forEach(b=>hrs[b.c]=(hrs[b.c]||0)+b.min));
+  $("courses").innerHTML=Object.entries(COURSES).filter(([,c])=>c.u).sort((a,b)=>(hrs[b[0]]||0)-(hrs[a[0]]||0)).map(([k,c])=>`<details class="acc"><summary><span><span class="code">${c.code}</span><b>${esc(c.name)}</b><br><span class="u">${c.u} units, ${fmt(hrs[k]||0)} a week</span></span></summary><div class="bd"><p>${esc(c.brief)}</p></div></details>`).join("");
+  $("logCourse").innerHTML=Object.entries(COURSES).map(([k,c])=>`<option value="${k}">${c.code}${c.u?" "+esc(c.name):""}</option>`).join("")}
+function renderTests(items){const el=$("tests");
+  if(!items||!items.length){el.innerHTML='<li class="note">No test dates yet. Add them below as soon as they are announced.</li>';return}
+  const t0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  el.innerHTML=items.slice().sort((a,b)=>String(a.date).localeCompare(b.date)).map(t=>{const[y,m,d]=String(t.date).split("-").map(Number);const n=Math.round((new Date(y,m-1,d)-t0)/864e5);
+    return `<li><span>${esc(t.name)}</span><span class="d">${esc(t.date)} ${n>=0?"(in "+n+" days)":"(done)"} <button class="linkbtn" type="button" data-t="${esc(t.id||"")}" aria-label="Remove ${esc(t.name)}">Remove</button></span></li>`}).join("")}
+function renderAll(){renderDays();renderDay();renderWeek()}
+
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}};
+Object.assign(logs,LS.get("rp_logs",{}));
+let tests=LS.get("rp_tests",[]);
+function saveDay(dk,entries){logs[dk]=entries;renderAll();if(!LS.set("rp_logs",logs))$("saveNote").textContent="This browser is blocking storage, so ticks will not be kept. Try a normal (not private) window."}
+function saveTests(){LS.set("rp_tests",tests);renderTests(tests)}
+$("days").addEventListener("click",e=>{const b=e.target.closest("button[data-d]");if(!b)return;selected=Number(b.dataset.d);renderAll()});
+$("blocks").addEventListener("click",e=>{const b=e.target.closest("button[data-b]");if(!b)return;
+  const dk=key(dateFor(selected)),entries=(logs[dk]||[]).slice(),id=b.dataset.b,i=entries.findIndex(x=>x.id===id);
+  if(i>=0)entries.splice(i,1);else{const blk=PLAN[selected].blocks.find(x=>x.id===id);entries.push({id,c:blk.c,min:blk.min,at:Date.now()})}
+  saveDay(dk,entries)});
+$("extra").addEventListener("click",e=>{const b=e.target.closest("button[data-x]");if(!b)return;const dk=key(dateFor(selected));saveDay(dk,(logs[dk]||[]).filter(x=>x.id!==b.dataset.x))});
+$("logForm").addEventListener("submit",e=>{e.preventDefault();const m=Math.round(Number($("logMin").value));if(!(m>0&&m<=300))return;
+  const dk=key(dateFor(selected));saveDay(dk,[...(logs[dk]||[]),{id:"x"+Date.now(),c:$("logCourse").value,min:m,at:Date.now()}])});
+
+renderCourses();renderFull();renderTests(tests);renderAll();
+(function(){const h=(location.hash||"").slice(1);let v=VIEWS.includes(h)?h:null;if(!v){try{v=localStorage.getItem("view")}catch(e){}}show(v||"today")})();
+$("testForm").addEventListener("submit",e=>{e.preventDefault();const n=$("tName").value.trim(),d=$("tDate").value;if(!n||!d)return;tests.push({id:"t"+Date.now(),name:n,date:d});saveTests();e.target.reset()});
+$("tests").addEventListener("click",e=>{const b=e.target.closest("button[data-t]");if(!b)return;tests=tests.filter(t=>t.id!==b.dataset.t);saveTests()});
+$("copyBk").addEventListener("click",async()=>{const txt=JSON.stringify({v:1,logs,tests});$("bkText").value=txt;try{await navigator.clipboard.writeText(txt);$("bkNote").textContent="Backup copied. Paste it into your notes or send it to Claude."}catch(e){$("bkText").select();$("bkNote").textContent="Backup is in the box. Select it and copy."}});
+$("loadBk").addEventListener("click",()=>{try{const o=JSON.parse($("bkText").value);if(!o||typeof o.logs!=="object")throw 0;Object.keys(logs).forEach(k=>delete logs[k]);Object.assign(logs,o.logs);tests=Array.isArray(o.tests)?o.tests:[];LS.set("rp_logs",logs);saveTests();renderAll();$("bkNote").textContent="Backup restored."}catch(e){$("bkNote").textContent="That text is not a valid backup. Copy it again from the other device."}});
+</script>
+
+</body>
+</html>
