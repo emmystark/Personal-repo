@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#152033">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#ffffff">
 <title>500MTE Reading Plan</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,16 +25,14 @@
   --bg:#0f141c; --surface:#161d28; --ink:#e7ecf3; --muted:#9aa7b9; --line:#2a3445; --grid:#1f2835;
   --accent:#7aa6ff; --accent-soft:#1c2a45; --done:#5fd197; --done-soft:#16301f; --warn:#f0a35c; --warn-soft:#352414; color-scheme:dark}
 *{box-sizing:border-box}
-html,body{margin:0}
-:root{padding-top:env(safe-area-inset-top,0px)}
-[hidden]{display:none!important}
+body{margin:0}
 .tform{display:grid;grid-template-columns:minmax(0,1fr) 150px auto;gap:8px;align-items:end}
 @media (max-width:480px){.tform{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.tform .btn{grid-column:1/-1}}
 .tform label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);font-weight:600;min-width:0}
 .tform input,textarea{min-height:44px;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:15px var(--body);padding:0 10px}
-textarea{padding:10px;min-height:90px;font:13px var(--mono)}
-.btn.ghost{background:var(--accent-soft);color:var(--accent)}
+textarea{min-height:90px;padding:10px;font:12px var(--mono)}
 .btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.btn.ghost{background:var(--accent-soft);color:var(--accent)}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
@@ -124,6 +123,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
 </head>
 <body>
 
+
 <header class="top"><div class="in">
   <div><small>500MTE, first semester</small><h1>Reading Plan</h1></div>
   <span class="pill" id="topPill">0h 00m today</span>
@@ -160,12 +160,20 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
       <div><b id="wkTotal">0h 00m</b><small>logged of 24h 15m</small></div>
       <div><b id="wkDays">0 / 7</b><small>days at the minimum</small></div>
     </div>
+    <h2>Progress so far</h2>
+    <div class="kv">
+      <div><b id="allTotal">0h 00m</b><small>read this semester</small></div>
+      <div><b id="allDays">0</b><small>days at the minimum</small></div>
+    </div>
+    <div class="card"><h3>Week by week</h3><div id="history"></div></div>
+    <div class="card"><h3>Hours by course</h3><div id="byCourse"></div></div>
     <h2>Full timetable</h2>
     <div id="fullWeek" style="display:flex;flex-direction:column;gap:12px"></div>
   </section>
 
   <section class="view" id="v-courses" aria-labelledby="crsTitle" hidden>
     <h2 id="crsTitle">Where the marks are</h2>
+    <p class="note">Lecturers updated from the 2026/2027 course allocation.</p>
     <div class="flag"><b>PRE571 Question 1</b> is compulsory and has been the same 3Es &amp; P Conglomerate trial balance every year from 2021/22 to 2024/25. The 2023/24 and 2024/25 papers use identical figures. Master the Manufacturing, Trading, Profit and Loss and Balance Sheet layout and a fifth of the paper is yours before you start.</div>
     <div id="courses" style="display:flex;flex-direction:column;gap:10px"></div>
   </section>
@@ -194,7 +202,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
     </div>
     <h2>Backup</h2>
     <div class="card">
-      <p class="note">Your ticks and test dates are saved on this device. Copy a backup now and then, and paste it here to move them to another phone or laptop.</p>
+      <p class="note">Your ticks and test dates are saved on this device. Copy a backup every Sunday, and paste it here to move them to another phone or laptop.</p>
       <div class="btnrow"><button class="btn ghost" type="button" id="copyBk">Copy backup</button><button class="btn ghost" type="button" id="loadBk">Restore from pasted backup</button></div>
       <label for="bkText" class="note">Backup text</label>
       <textarea id="bkText" spellcheck="false"></textarea>
@@ -212,14 +220,14 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
 
 <script>
 const COURSES={
-  c531:{code:"MTE531",name:"Control Engineering II",u:3,brief:"Root locus, optimisation with error criteria, Nyquist stability, nonlinear systems (saturation, dead zone, phase plane, isoclines, describing function), multivariable systems. Heavy on worked problems. Engr Sly's materials are in your Drive."},
-  c521:{code:"MTE521",name:"Digital Signal Modelling",u:3,brief:"Sequences, LTI systems and convolution, sampling and aliasing, z-transform, DFT and FFT, digital filters. Marks come from computing, not defining. Drill convolution and z-transform until they are automatic."},
-  c511:{code:"MTE511",name:"Microcomputers & Microprocessors",u:3,brief:"2022/23 paper: 8085, 8051 and Z80 architecture diagrams, buses, accumulator, stepper motor interfacing with the 8051, magnitude comparator, combinational vs sequential logic. Full worked solutions to that paper are in your Drive."},
-  pre:{code:"PRE571",name:"Engineering Economics & Admin",u:3,brief:"Q1 final accounts is compulsory every year. Also repeating: cash budget, MBO merits and installation, trade union negotiation, Maslow, elements of organisational behaviour, preference vs equity shares, merit rating, job evaluation."},
-  c561:{code:"MTE561",name:"Vibrations",u:2,brief:"SDOF natural frequency, damping ratio, logarithmic decrement, forced response and phase, transmissibility and isolation, beam frequencies, then MDOF modal analysis. Rao's Mechanical Vibrations and its solution manual are in your Drive."},
-  c551:{code:"MTE551",name:"Introduction to Robotics",u:2,brief:"2024/25 paper: forward and inverse kinematics of a 2-link planar arm in almost every question, plus DH parameters, Tool Center Point, cobots, repeatability vs accuracy, sensors."},
-  c541:{code:"MTE541",name:"Computer Software II",u:2,brief:"OOP in Python, UML, software design, unit testing. Your daily work, so it gets the least time. Learn the lecturer's exact definitions; that is where marks slip."},
-  c576:{code:"MTE576",name:"Lean Product Mgt & Logistics",u:2,brief:"Prof. Aravie sets what he teaches. Attend every class in smart dress, be punctual, write down what he says."},
+  c531:{lec:"Prof. D.I. Igbinomwanhia, Engr. S. Akinbohun",code:"MTE531",name:"Control Engineering II",u:3,brief:"Root locus, optimisation with error criteria, Nyquist stability, nonlinear systems (saturation, dead zone, phase plane, isoclines, describing function), multivariable systems. Heavy on worked problems. The Drive notes came from Engr. Sly, who is no longer on the allocation, so check them against Engr. Akinbohun's outline before you lean on them."},
+  c521:{lec:"Dr. E. Orumwense",code:"MTE521",name:"Digital Signal Modelling",u:3,brief:"Sequences, LTI systems and convolution, sampling and aliasing, z-transform, DFT and FFT, digital filters. Marks come from computing, not defining. Drill convolution and z-transform until they are automatic."},
+  c511:{lec:"Dr. Kwasi-Effah, Dr. Unuereokpa",code:"MTE511",name:"Microcomputers & Microprocessors",u:3,brief:"2022/23 paper: 8085, 8051 and Z80 architecture diagrams, buses, accumulator, stepper motor interfacing with the 8051, magnitude comparator, combinational vs sequential logic. Full worked solutions to that paper are in your Drive. Both lecturers are new on this course, so watch which topics they stress in class."},
+  pre:{lec:"Shared faculty course",code:"PRE571",name:"Engineering Economics & Admin",u:3,brief:"Q1 final accounts is compulsory every year. Also repeating: cash budget, MBO merits and installation, trade union negotiation, Maslow, elements of organisational behaviour, preference vs equity shares, merit rating, job evaluation."},
+  c561:{lec:"Prof. G.O. Ariavie",code:"MTE561",name:"Vibrations",u:2,brief:"SDOF natural frequency, damping ratio, logarithmic decrement, forced response and phase, transmissibility and isolation, beam frequencies, then MDOF modal analysis. Rao's Mechanical Vibrations and its solution manual are in your Drive."},
+  c551:{lec:"Engr. P. Olagbegi",code:"MTE551",name:"Introduction to Robotics",u:2,brief:"2024/25 paper: forward and inverse kinematics of a 2-link planar arm in almost every question, plus DH parameters, Tool Center Point, cobots, repeatability vs accuracy, sensors."},
+  c541:{lec:"Dr. A.I. Edeoghon",code:"MTE541",name:"Computer Software II",u:2,brief:"OOP in Python, UML, software design, unit testing. Your daily work, so it gets the least time. Learn the lecturer's exact definitions; that is where marks slip."},
+  c576:{lec:"Engr. Ugherughe",code:"MTE576",name:"Lean Product Mgt & Logistics",u:2,brief:"Engr. Ugherughe is new on this course, so last year's tip about Prof. Ariavie no longer applies. Attend every class, write down what he stresses, and collect any handout. Theory course: definitions and lists from memory."},
   rev:{code:"REVIEW",name:"Same day review",u:0},
   wk:{code:"WEEKLY",name:"Weekly review",u:0}
 };
@@ -304,20 +312,35 @@ function renderWeek(){let total=0,ok=0;const max=Math.max(...ORDER.map(target));
   $("wkTotal").textContent=fmt(total);$("wkDays").textContent=`${ok} / 7`;}
 function renderFull(){$("fullWeek").innerHTML=ORDER.map(d=>`<div class="card dayplan"><h3>${FULL[d]} <span>${fmt(target(d))}, classes: ${esc(PLAN[d].classes)}</span></h3>${PLAN[d].blocks.map(b=>`<div class="row"><span class="time">${b.at}<br>${b.min} min</span><span><span class="code">${COURSES[b.c].code}</span>${esc(b.t)}</span></div>`).join("")}</div>`).join("")}
 function renderCourses(){const hrs={};ORDER.forEach(d=>PLAN[d].blocks.forEach(b=>hrs[b.c]=(hrs[b.c]||0)+b.min));
-  $("courses").innerHTML=Object.entries(COURSES).filter(([,c])=>c.u).sort((a,b)=>(hrs[b[0]]||0)-(hrs[a[0]]||0)).map(([k,c])=>`<details class="acc"><summary><span><span class="code">${c.code}</span><b>${esc(c.name)}</b><br><span class="u">${c.u} units, ${fmt(hrs[k]||0)} a week</span></span></summary><div class="bd"><p>${esc(c.brief)}</p></div></details>`).join("");
+  $("courses").innerHTML=Object.entries(COURSES).filter(([,c])=>c.u).sort((a,b)=>(hrs[b[0]]||0)-(hrs[a[0]]||0)).map(([k,c])=>`<details class="acc"><summary><span><span class="code">${c.code}</span><b>${esc(c.name)}</b><br><span class="u">${c.u} units, ${fmt(hrs[k]||0)} a week</span>${c.lec?`<br><span class="u">${esc(c.lec)}</span>`:""}</span></summary><div class="bd"><p>${esc(c.brief)}</p></div></details>`).join("");
   $("logCourse").innerHTML=Object.entries(COURSES).map(([k,c])=>`<option value="${k}">${c.code}${c.u?" "+esc(c.name):""}</option>`).join("")}
 function renderTests(items){const el=$("tests");
   if(!items||!items.length){el.innerHTML='<li class="note">No test dates yet. Add them below as soon as they are announced.</li>';return}
   const t0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   el.innerHTML=items.slice().sort((a,b)=>String(a.date).localeCompare(b.date)).map(t=>{const[y,m,d]=String(t.date).split("-").map(Number);const n=Math.round((new Date(y,m-1,d)-t0)/864e5);
     return `<li><span>${esc(t.name)}</span><span class="d">${esc(t.date)} ${n>=0?"(in "+n+" days)":"(done)"} <button class="linkbtn" type="button" data-t="${esc(t.id||"")}" aria-label="Remove ${esc(t.name)}">Remove</button></span></li>`}).join("")}
-function renderAll(){renderDays();renderDay();renderWeek()}
+function renderAll(){renderDays();renderDay();renderWeek();renderHistory()}
 
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}};
 Object.assign(logs,LS.get("rp_logs",{}));
 let tests=LS.get("rp_tests",[]);
-function saveDay(dk,entries){logs[dk]=entries;renderAll();if(!LS.set("rp_logs",logs))$("saveNote").textContent="This browser is blocking storage, so ticks will not be kept. Try a normal (not private) window."}
+function saveDay(dk,entries){logs[dk]=entries;renderAll();
+  if(LS.set("rp_logs",logs)&&JSON.stringify(LS.get("rp_logs",{})[dk]||[])===JSON.stringify(entries)){const t=new Date();$("saveNote").textContent=`Saved on this phone at ${t.getHours()}:${pad(t.getMinutes())}.`}
+  else $("saveNote").textContent="This browser did not keep that tick. You may be in a private tab or an in-app browser. Open the app from your home screen."}
 function saveTests(){LS.set("rp_tests",tests);renderTests(tests)}
+function renderHistory(){
+  const days=Object.keys(logs).filter(k=>(logs[k]||[]).length).sort();
+  let all=0,okd=0;const weeks={},byC={};
+  days.forEach(k=>{const[y,m,d]=k.split("-").map(Number),dt=new Date(y,m-1,d),wd=dt.getDay(),mins=sum(k);all+=mins;if(mins>=minimum(wd))okd++;
+    const mon=new Date(y,m-1,d-((wd+6)%7)),wk=key(mon);(weeks[wk]=weeks[wk]||{m:0,ok:0}).m+=mins;if(mins>=minimum(wd))weeks[wk].ok++;
+    logs[k].forEach(e=>byC[e.c]=(byC[e.c]||0)+e.min)});
+  $("allTotal").textContent=fmt(all);$("allDays").textContent=okd;
+  const wks=Object.keys(weeks).sort().reverse();
+  $("history").innerHTML=wks.length?wks.map(w=>{const[y,m,d]=w.split("-").map(Number);const lbl=new Date(y,m-1,d).toLocaleDateString(undefined,{day:"numeric",month:"short"});
+    return `<div class="row"><span class="time">Wk of ${lbl}</span><span><b>${fmt(weeks[w].m)}</b> of 24h 15m, ${weeks[w].ok} of 7 days at the minimum</span></div>`}).join(""):'<p class="note">Nothing logged yet. Tick your first block on the Today tab.</p>';
+  const cs=Object.entries(byC).sort((a,b)=>b[1]-a[1]);
+  $("byCourse").innerHTML=cs.length?cs.map(([c,m])=>`<div class="row"><span class="time">${fmt(m)}</span><span><span class="code">${COURSES[c]?.code||esc(c)}</span>${esc(COURSES[c]?.name||"")}</span></div>`).join(""):'<p class="note">Course totals appear after your first tick.</p>';
+}
 $("days").addEventListener("click",e=>{const b=e.target.closest("button[data-d]");if(!b)return;selected=Number(b.dataset.d);renderAll()});
 $("blocks").addEventListener("click",e=>{const b=e.target.closest("button[data-b]");if(!b)return;
   const dk=key(dateFor(selected)),entries=(logs[dk]||[]).slice(),id=b.dataset.b,i=entries.findIndex(x=>x.id===id);
@@ -331,9 +354,15 @@ renderCourses();renderFull();renderTests(tests);renderAll();
 (function(){const h=(location.hash||"").slice(1);let v=VIEWS.includes(h)?h:null;if(!v){try{v=localStorage.getItem("view")}catch(e){}}show(v||"today")})();
 $("testForm").addEventListener("submit",e=>{e.preventDefault();const n=$("tName").value.trim(),d=$("tDate").value;if(!n||!d)return;tests.push({id:"t"+Date.now(),name:n,date:d});saveTests();e.target.reset()});
 $("tests").addEventListener("click",e=>{const b=e.target.closest("button[data-t]");if(!b)return;tests=tests.filter(t=>t.id!==b.dataset.t);saveTests()});
-$("copyBk").addEventListener("click",async()=>{const txt=JSON.stringify({v:1,logs,tests});$("bkText").value=txt;try{await navigator.clipboard.writeText(txt);$("bkNote").textContent="Backup copied. Paste it into your notes or send it to Claude."}catch(e){$("bkText").select();$("bkNote").textContent="Backup is in the box. Select it and copy."}});
+$("copyBk").addEventListener("click",async()=>{const txt=JSON.stringify({v:1,logs,tests});$("bkText").value=txt;try{await navigator.clipboard.writeText(txt);$("bkNote").textContent="Backup copied. Paste it into your notes."}catch(e){$("bkText").select();$("bkNote").textContent="Backup is in the box. Select it and copy."}});
 $("loadBk").addEventListener("click",()=>{try{const o=JSON.parse($("bkText").value);if(!o||typeof o.logs!=="object")throw 0;Object.keys(logs).forEach(k=>delete logs[k]);Object.assign(logs,o.logs);tests=Array.isArray(o.tests)?o.tests:[];LS.set("rp_logs",logs);saveTests();renderAll();$("bkNote").textContent="Backup restored."}catch(e){$("bkNote").textContent="That text is not a valid backup. Copy it again from the other device."}});
+(async function(){
+  let ok=false;try{localStorage.setItem("rp_probe","1");ok=localStorage.getItem("rp_probe")==="1";localStorage.removeItem("rp_probe")}catch(e){}
+  const n=Object.keys(logs).filter(k=>(logs[k]||[]).length).length;
+  if(!ok){$("saveNote").textContent="This browser is blocking storage, so ticks will not be kept. Open the app from your home screen, not a private tab.";return}
+  let kept=false;try{if(navigator.storage&&navigator.storage.persist)kept=await navigator.storage.persist()}catch(e){}
+  $("saveNote").textContent=(n?`Loaded ${n} day${n>1?"s":""} of history from this phone. `:"Ticks save on this phone automatically. ")+(kept?"Storage is locked in.":"Copy a backup every Sunday from the Exams tab.");
+})();
 </script>
-
 </body>
 </html>
